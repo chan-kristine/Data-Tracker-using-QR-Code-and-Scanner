@@ -8,14 +8,34 @@
 # Create QR Code
 
 import qrcode
-qrcd = qrcode.QRCode(
+qr = qrcode.QRCode(
     version=1,
     error_correction=qrcode.constants.ERROR_CORRECT_L,
-    boxsize=11,
-    border=5,
+    box_size=10,
+    border=4,
 )
 link = "https://web.facebook.com/Luunnnaaa/"
-qrcd.add_data(link)
-qrcd.make(fit=True)
-img = qrcd.make_image(fill_color="pink", back_color="black")
+qr.add_data(link)
+qr.make(fit=True)
+img = qr.make_image(fill_color="black", back_color="pink")
 img.save("qrcodechan.png")
+
+
+# QR Code Scanner
+import cv2
+import webbrowser
+import datetime
+vcapture = cv2.VideoCapture(0)
+vdetector = cv2.QRCodeDetector()
+while True:
+    _, img = vcapture.read()
+    data, one, _ = vdetector.detectAndDecode(img)
+    if data:
+        read = data
+        break
+    cv2.imshow('QRCode Scanner', img)
+    if cv2.waitKey(1)==ord('a'):
+        break
+redirect = webbrowser.open((str(read)))
+vcapture.release(read)
+cv2.destroyAllWindows
